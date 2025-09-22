@@ -1182,6 +1182,7 @@ out_ksu_try_umount:
 #endif
 	}
 
+do_umount:
 #ifndef CONFIG_KSU_SUSFS_SUS_MOUNT
 	// check old process's selinux context, if it is not zygote, ignore it!
 	// because some su apps may setuid to untrusted_app but they are in global mount namespace
