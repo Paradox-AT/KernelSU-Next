@@ -1149,7 +1149,7 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
 	}
 #endif
 
-	if (is_non_appuid(new_uid)) {
+	if (!is_appuid(new_uid) || is_unsupported_app_uid(new_uid.val)) {
 #ifdef CONFIG_KSU_DEBUG
 		pr_info("handle setuid ignore non application uid: %d\n",
 			new_uid.val);
@@ -1157,19 +1157,6 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
 		return 0;
 	}
 
-#ifdef CONFIG_KSU_DEBUG
-		pr_info("handle umount for unsupported application uid: %d\n",
-			new_uid.val);
-#endif
-	}
-	if (is_unsupported_app_uid(new_uid.val)) {
-	if (ksu_is_allow_uid(new_uid.val)) {
-#ifdef CONFIG_KSU_DEBUG
-		pr_info("handle setuid ignore allowed application: %d\n",
-			new_uid.val);
-#endif
-		return 0;
-	}
 #ifdef CONFIG_KSU_SUSFS
 	else {
 		task_lock(current);
